@@ -1,25 +1,28 @@
 """
-contingency.py — Generación del Plan B a partir de una ruta seleccionada.
-Funciones puras que transforman datos crudos en estructuras de presentación.
-Sin I/O, sin Streamlit, sin side effects.
+contingency.py — Generación del Plan B a partir de tipo de incidencia.
+Funciones puras. Sin I/O, sin Streamlit, sin side effects.
 """
 
-from logic.router import clasificar_afluencia, clasificar_ruido, seleccionar_ruta_optima
-from data.routes import obtener_rutas_viables
-from logic.validator import validar_lista_rutas
+from logic.router import seleccionar_ruta_optima, clasificar_afluencia, clasificar_ruido
+from data.routes import obtener_rutas_por_tipo, obtener_rutas_viables
+from logic.validator import validar_lista_rutas, ErrorValidacion
+from config import TIPO_INCIDENCIA_DEFAULT
 
 
-def generar_plan_b() -> dict:
+def generar_plan_b(tipo_incidencia: str = TIPO_INCIDENCIA_DEFAULT) -> dict:
     """
-    Ejecuta el pipeline completo: obtiene rutas viables → selecciona óptima → formatea Plan B.
+    Pipeline completo: filtra rutas por tipo → selecciona óptima → formatea Plan B.
+    Inputs: tipo_incidencia — string del tipo de incidencia activo.
     Outputs: dict con claves: incidencia, pasos, afluencia_label, ruido_label, retraso_label.
-    Errors: propaga ErrorValidacion si no hay rutas viables disponibles.
+    Errors: ErrorValidacion si no hay rutas viables para el tipo dado.
     """
-    rutas_viables = obtener_rutas_viables()
-    validar_lista_rutas(rutas_viables)
+    rutas = obtener_rutas_por_tipo(tipo_incidencia)
 
-    ruta = seleccionar_ruta_optima(rutas_viables)
+    if len(rutas) == 0:
+        rutas = obtener_rutas_viables()
 
+    validar_lista_rutas(rutas)
+    ruta = seleccionar_ruta_optima(rutas)
     return formatear_plan_b(ruta)
 
 
@@ -34,5 +37,6 @@ def formatear_plan_b(ruta: dict) -> dict:
         "pasos": ruta["pasos"],
         "afluencia_label": f"{ruta['afluencia_pct']}% ({clasificar_afluencia(ruta['afluencia_pct'])})",
         "ruido_label": f"{ruta['ruido_db']} dB ({clasificar_ruido(ruta['ruido_db'])})",
-        "retraso_label": f"+{ruta['retraso_minutos']} minutos"
+        "retraso_label": f"+{ruta['retraso_minutos']} minutos",
+        "requiere_taxi": ruta["afluencia_pct"] == 0
     }
