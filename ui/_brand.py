@@ -1,13 +1,12 @@
 """
-_brand.py — Inyección CSS global. Un solo lugar para toda decisión visual.
-Importado una sola vez desde app.py. No contiene lógica ni componentes.
+_brand.py — Inyección CSS global. Toda decisión visual en un solo lugar.
 """
 
 import streamlit as st
 from config import (
     COLOR_NAVY, COLOR_CORAL, COLOR_GOLD,
     COLOR_TINTA, COLOR_MUTED, COLOR_BG,
-    COLOR_SURFACE, COLOR_BORDER
+    COLOR_SURFACE, COLOR_BORDER, COLOR_SUCCESS
 )
 
 CSS_GLOBAL = f"""
@@ -19,7 +18,7 @@ CSS_GLOBAL = f"""
     }}
     header {{visibility: hidden;}}
     footer {{visibility: hidden;}}
-    h1, h2, h3, h4, p, span, div {{
+    * {{
         font-family: system-ui, -apple-system, sans-serif !important;
     }}
 
@@ -30,12 +29,13 @@ CSS_GLOBAL = f"""
         border: 2px solid {COLOR_CORAL};
         border-radius: 4px;
         font-weight: bold;
-        font-size: 18px;
-        padding: 24px;
+        font-size: 16px;
+        padding: 20px;
         width: 100%;
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: background-color 0.2s ease, color 0.2s ease;
+        cursor: pointer;
     }}
     div.stButton > button:hover {{
         background-color: {COLOR_CORAL};
@@ -47,21 +47,26 @@ CSS_GLOBAL = f"""
     .metric-container {{
         background-color: {COLOR_SURFACE};
         border-left: 4px solid {COLOR_MUTED};
-        padding: 16px;
-        margin-bottom: 24px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.8;
+        border-radius: 2px;
     }}
 
     /* PASO DE PLAN B */
     .step-box {{
         background-color: {COLOR_SURFACE};
         border: 1px solid {COLOR_BORDER};
-        padding: 18px;
+        padding: 16px 20px;
         margin-bottom: 8px;
         border-radius: 4px;
-        font-size: 16px;
-        line-height: 1.5;
+        font-size: 15px;
+        line-height: 1.6;
+    }}
+    .step-box.completado {{
+        border-color: {COLOR_SUCCESS};
+        opacity: 0.65;
     }}
     .step-number {{
         color: {COLOR_GOLD};
@@ -69,23 +74,99 @@ CSS_GLOBAL = f"""
         margin-right: 12px;
         font-family: monospace;
     }}
+    .step-number.completado {{
+        color: {COLOR_SUCCESS};
+    }}
 
-    /* ALERTA DE ANOMALÍA */
+    /* STATUS PILLS */
+    .pill {{
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-left: 8px;
+    }}
+    .pill-ok {{ background-color: #1A3A2A; color: {COLOR_SUCCESS}; }}
+    .pill-warn {{ background-color: #3A2A1A; color: {COLOR_GOLD}; }}
+    .pill-alert {{ background-color: #3A1A1A; color: {COLOR_CORAL}; }}
+
+    /* ANOMALÍA HEADER */
     .anomalia-header {{
         color: {COLOR_CORAL};
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+        line-height: 1.4;
     }}
     .plan-b-label {{
         color: {COLOR_GOLD};
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
-        margin: 24px 0 12px 0;
+        margin: 20px 0 10px 0;
+        letter-spacing: 0.5px;
     }}
-    .metricas-label {{
+
+    /* SENSORY CHECK */
+    .sensory-check {{
+        background-color: {COLOR_SURFACE};
+        border: 1px solid {COLOR_BORDER};
+        border-top: 3px solid {COLOR_GOLD};
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        border-radius: 2px;
+        font-size: 13px;
+        line-height: 1.7;
+        color: {COLOR_MUTED};
+    }}
+    .sensory-check strong {{
         color: {COLOR_GOLD};
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }}
+
+    /* SILENT CARD */
+    .silent-card-container {{
+        background-color: #000000;
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 32px;
+        border-radius: 4px;
+        text-align: center;
+    }}
+    .silent-card-text {{
+        color: #FFFFFF;
+        font-size: clamp(28px, 5vw, 48px);
         font-weight: bold;
+        line-height: 1.5;
+        white-space: pre-line;
+    }}
+    .silent-card-label {{
+        color: {COLOR_MUTED};
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 32px;
+    }}
+
+    /* SUBTÍTULO DEL SISTEMA */
+    .system-subtitle {{
+        color: {COLOR_MUTED};
+        font-size: 13px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }}
+    .divider {{
+        border: none;
+        border-top: 1px solid {COLOR_BORDER};
+        margin: 20px 0;
     }}
 </style>
 """
@@ -93,7 +174,6 @@ CSS_GLOBAL = f"""
 
 def aplicar_estilos_globales() -> None:
     """
-    Inyecta el bloque CSS global en la app de Streamlit.
-    Debe llamarse una sola vez desde app.py antes de renderizar cualquier página.
+    Inyecta el bloque CSS global. Llamar una sola vez desde app.py.
     """
     st.markdown(CSS_GLOBAL, unsafe_allow_html=True)
