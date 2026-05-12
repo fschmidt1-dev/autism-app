@@ -1,0 +1,8 @@
+<svg viewBox="0 0 1200 200" width="1200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&amp;display=swap');
+    .wm { font-family: 'Instrument Sans', sans-serif; font-weight: 700; font-size: 140px; letter-spacing: -0.03em; fill: #E6FCFB; text-anchor: middle; }
+  </style>
+  <rect width="1200" height="200" fill="#040F2D"/>
+  <text x="600" y="150" class="wm">Navify</text>
+</svg>
