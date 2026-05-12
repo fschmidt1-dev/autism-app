@@ -1,0 +1,13 @@
+<svg viewBox="0 0 800 200" width="800" height="200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&amp;display=swap');
+    .wm { font-family: 'Instrument Sans', sans-serif; font-weight: 700; font-size: 110px; letter-spacing: -0.03em; fill: #E6FCFB; }
+  </style>
+  <rect width="800" height="200" fill="#040F2D"/>
+  <g transform="translate(40, 20)">
+    <rect x="0" y="0" width="30" height="160" rx="4" fill="#528DAB"/>
+    <rect x="110" y="0" width="30" height="160" rx="4" fill="#528DAB"/>
+    <circle cx="70" cy="80" r="22" fill="#87C39A"/>
+  </g>
+  <text x="220" y="145" class="wm">Navify</text>
+</svg>
