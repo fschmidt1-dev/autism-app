@@ -1,6 +1,5 @@
 """
 home.py — Página de estado nominal. Selector de ruta + activación de incidencia.
-Solo renderiza y delega. Sin reglas de negocio.
 """
 
 import time
@@ -21,12 +20,7 @@ from ui.components import (
     render_estado_nominal
 )
 
-
 def _activar_panico(tipo_incidencia: str) -> None:
-    """
-    Llama al motor lógico, persiste resultado en session_state.
-    Envuelve la llamada en try/except con mensaje específico visible al usuario.
-    """
     try:
         with st.spinner(LABEL_SPINNER_CALCULO):
             time.sleep(1.2)
@@ -39,17 +33,11 @@ def _activar_panico(tipo_incidencia: str) -> None:
     except Exception as e:
         st.error(f"Error al calcular ruta alternativa: {e}. Intenta con otro tipo de incidencia.")
 
-
 def render_home() -> None:
-    """
-    Renderiza la página de estado nominal con selector de ruta e incidencia.
-    Estados: EMPTY (sin ruta seleccionada) · NOMINAL (ruta activa) · LOADING (spinner).
-    """
     render_encabezado_sistema()
-    st.markdown(f"### {LABEL_ESTADO_NOMINAL}")
+    st.markdown(f"<h3 style='color: #0A1F44; font-weight: 700;'>{LABEL_ESTADO_NOMINAL}</h3>", unsafe_allow_html=True)
     render_sensory_check()
 
-    # Selector de ruta activa
     ruta_seleccionada = st.selectbox(
         "Ruta activa",
         options=[""] + RUTAS_DISPONIBLES,
@@ -57,16 +45,13 @@ def render_home() -> None:
         help="Selecciona la línea que estás usando ahora mismo."
     )
 
-    # Estado EMPTY — ninguna ruta seleccionada
     if not ruta_seleccionada:
         st.info(LABEL_EMPTY_SELECTOR)
         return
 
-    # Estado NOMINAL — muestra datos de la ruta
     render_estado_nominal(ruta_seleccionada, RUTA_DEMO_AFLUENCIA_PCT, RUTA_DEMO_RUIDO_DB)
-    st.markdown("<hr class='divider'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-top: 1px solid rgba(63,79,99,0.2); margin: 20px 0;'>", unsafe_allow_html=True)
 
-    # Selector de tipo de incidencia
     tipo = st.selectbox(
         "Tipo de incidencia detectada",
         options=TIPOS_INCIDENCIA,
@@ -76,7 +61,6 @@ def render_home() -> None:
 
     st.write("")
 
-    # Botón de activación — estado LOADING ocurre dentro de _activar_panico
     if st.button(LABEL_BOTON_INCIDENCIA):
         _activar_panico(tipo)
         if st.session_state.get("panic_mode"):
