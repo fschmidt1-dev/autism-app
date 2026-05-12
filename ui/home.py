@@ -1,5 +1,5 @@
 """
-home.py — Página de estado nominal. Selector de ruta + activación de incidencia.
+home.py — Página de estado nominal. Selector de origen, ruta y anomalías.
 """
 
 import time
@@ -35,25 +35,35 @@ def _activar_panico(tipo_incidencia: str) -> None:
 
 def render_home() -> None:
     render_encabezado_sistema()
-    st.markdown(f"<h3 style='color: #0A1F44; font-weight: 700;'>{LABEL_ESTADO_NOMINAL}</h3>", unsafe_allow_html=True)
     render_sensory_check()
 
+    st.markdown(f"<h3 style='color: #0A1F44; font-weight: 700; margin-top: 24px;'>CONFIGURAR VIAJE</h3>", unsafe_allow_html=True)
+    
+    # Nuevo: Input para el Origen
+    origen = st.text_input(
+        "Punto de Origen (Estación actual)", 
+        placeholder="Ej. Puerta del Sol",
+        help="¿Dónde te encuentras ahora mismo?"
+    )
+
     ruta_seleccionada = st.selectbox(
-        "Ruta activa",
+        "Ruta activa / Destino",
         options=[""] + RUTAS_DISPONIBLES,
         index=RUTAS_DISPONIBLES.index(RUTA_DEMO_DEFAULT) + 1,
-        help="Selecciona la línea que estás usando ahora mismo."
+        help="Selecciona la línea o ruta que vas a tomar."
     )
 
     if not ruta_seleccionada:
-        st.info(LABEL_EMPTY_SELECTOR)
+        st.info("Ingresa tu origen y selecciona tu ruta para comenzar a monitorear.")
         return
 
-    render_estado_nominal(ruta_seleccionada, RUTA_DEMO_AFLUENCIA_PCT, RUTA_DEMO_RUIDO_DB)
-    st.markdown("<hr style='border-top: 1px solid rgba(63,79,99,0.2); margin: 20px 0;'>", unsafe_allow_html=True)
+    # Pasamos el "origen" escrito al componente que lo pinta
+    render_estado_nominal(origen, ruta_seleccionada, RUTA_DEMO_AFLUENCIA_PCT, RUTA_DEMO_RUIDO_DB)
+    st.markdown("<hr style='border-top: 2px solid #528DAB; margin: 24px 0;'>", unsafe_allow_html=True)
 
+    st.markdown(f"<h3 style='color: #F1B28E; font-weight: 700;'>REPORTE DE ANOMALÍAS</h3>", unsafe_allow_html=True)
     tipo = st.selectbox(
-        "Tipo de incidencia detectada",
+        "¿Qué anomalía se ha detectado?",
         options=TIPOS_INCIDENCIA,
         index=0,
         help="Elige el tipo que coincida con lo que ves en pantalla o megafonía."
