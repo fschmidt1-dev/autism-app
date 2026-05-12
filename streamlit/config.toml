@@ -1,0 +1,15 @@
+[theme]
+# El acento principal de interacción (Certeza / Check)
+primaryColor = "#87C39A"
+
+# Neutral 2 / Bg - Fondo de página anti-fatiga visual
+backgroundColor = "#FEFDFA"
+
+# Neutral 3 / Surface - Fondo de elementos secundarios (sidebar, widgets)
+secondaryBackgroundColor = "#F9FBFD"
+
+# Neutral 1 / Text - Legibilidad máxima
+textColor = "#040F2D"
+
+# Tipografía del sistema base
+font = "sans serif"
